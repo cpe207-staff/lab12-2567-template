@@ -1,95 +1,84 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import Controller from "@components/Controller";
+import { Detail } from "@components/Detail";
+import { Footer } from "@components/Footer";
+import { Header } from "@components/Header";
+import { LangContext } from "@contexts/LangContext";
+import { ThemeContext } from "@contexts/ThemeContext";
+import { useState } from "react";
 
 export default function Home() {
+  const THEMES = {
+    LIGHT: {
+      name: "light",
+      bgColor: "white",
+      fgColor: "black",
+    },
+    DARK: {
+      name: "dark",
+      bgColor: "black",
+      fgColor: "white",
+    },
+  };
+
+  const LANGS = {
+    EN: {
+      name: "en",
+      header: "A simple useContext Example",
+      detail: {
+        lightActivated: "light theme activated",
+        darkActivated: "dark theme activated",
+      },
+      buttons: {
+        setLightTheme: "Light",
+        setDarkTheme: "Dark",
+        toggleTheme: "Toggle Theme",
+        toggleLang: "Toggle Language",
+      },
+    },
+    TH: {
+      name: "th",
+      header: "ตัวอย่างเว็บไซท์ useContext อย่างง่าย",
+      detail: {
+        lightActivated: "กำลังใช้ธีมไลท์",
+        darkActivated: "กำลังใช้ธีมดาร์ค",
+      },
+      buttons: {
+        setLightTheme: "ธีมไลท์",
+        setDarkTheme: "ธีมดาร์ค",
+        toggleTheme: "สลับธีม",
+        toggleLang: "สลับภาษา",
+      },
+    },
+  };
+
+  const [theme, setTheme] = useState(THEMES.LIGHT);
+  const [lang, setLang] = useState(LANGS.EN);
+
+  const setLightTheme = () => setTheme(THEMES.LIGHT);
+  const setDarkTheme = () => setTheme(THEMES.DARK);
+  const toggleTheme = () =>
+    setTheme(theme.name === "dark" ? THEMES.LIGHT : THEMES.DARK);
+
+  const toggleLang = () => setLang(lang.name === "en" ? LANGS.TH : LANGS.EN);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <div
+      style={{
+        backgroundColor: theme.bgColor,
+        minHeight: "100vh",
+      }}
+    >
+      <ThemeContext.Provider
+        value={{ theme, toggleTheme, setDarkTheme, setLightTheme }}
+      >
+        <LangContext.Provider value={{ lang, toggleLang }}>
+          <Header />
+          <Detail />
+          <Controller />
+        </LangContext.Provider>
+      </ThemeContext.Provider>
+      <Footer year="2023" fullName="Chayanin Suatap" studentId="660610999" />
+    </div>
   );
 }
